@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPPY BIRTHDAY HEATHER!!!!!</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #9a87fa;
+            color: #111;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(45px, 12vw, 75px);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 35px;
+        }
+
+        h2 {
+            font-size: 26px;
+            margin-bottom: 25px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            margin: 8px 0;
+            border: 2px solid #111;
+            border-radius: 10px;
+            background: transparent;
+            color: #111;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #111;
+            color: white;
+        }
+
+        .main-button {
+            background: #111;
+            color: white;
+        }
+
+        .main-button:hover {
+            background: #333;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .progress {
+            width: 100%;
+            height: 9px;
+            background: #e8aabb;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #111;
+            transition: width 0.3s;
+        }
+
+        .feedback {
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 24px;
+        }
+
+        .spotify-button {
+            display: inline-block;
+            background: #111;
+            color: white;
+            text-decoration: none;
+            padding: 16px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .spotify-button:hover {
+            background: #333;
+        }
+
+        .question-number {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Birthday opening screen -->
+        <div id="welcome" class="screen active">
+            <h1>HAPPY<br>BIRTHDAY</h1>
+            <button class="main-button" onclick="startQuiz()">
+                START QUIZ
+            </button>
+        </div>
+
+
+        <!-- Quiz screen -->
+        <div id="quiz" class="screen">
+
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <p class="question-number" id="questionNumber"></p>
+
+            <h2 id="question"></h2>
+
+            <div id="answers"></div>
+
+            <div class="feedback" id="feedback"></div>
+
+        </div>
+
+
+        <!-- Final screen -->
+        <div id="finished" class="screen">
+
+            <h1>YOU DID IT!</h1>
+
+
+            <p>Here's a little message for you:</p>
+
+            <a
+                href="https://open.spotify.com/playlist/1bMXsBCcijQYhZle2VH815?si=a6a6079d319145d7&pt=fd198e13e9279d224d36772792ff6c5e"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="spotify-button">
+                CLICK ME
+    </a>
+
+    </div>
+
+
+    <script>
+
+        
+
+        const questions = [
+
+            {
+                question: "How old are you turning?",
+                answers: [
+                    "22",
+                    "22 ooo ooo",
+                    "67"
+                ],
+                correct: 1
+            },
+
+            {
+                question: "What is my favourite thing about you?",
+                answers: [
+                    "Your smile",
+                    "Your personality",
+                    "Everything"
+                ],
+                correct: 2
+            },
+
+            {
+                question: "Where are we going next year?",
+                answers: [
+                    "Slough",
+                    "Skegness",
+                    "America"
+                ],
+                correct: 2
+            },
+
+            {
+                question: "What is our favourite thing to do together?",
+                answers: [
+                    "Quizzes",
+                    "Go out for food",
+                    "Bike Rides"
+                ],
+                correct: 2
+            },
+
+            {
+                question: "How much do I love you?",
+                answers: [
+                    "A little bit",
+                    "Quite a lot",
+                    "More than anything"
+                ],
+                correct: 2
+            }
+
+        ];
+
+
+        let currentQuestion = 0;
+
+
+        function showScreen(screenId) {
+
+            document.querySelectorAll(".screen").forEach(screen => {
+                screen.classList.remove("active");
+            });
+
+            document.getElementById(screenId).classList.add("active");
+
+        }
+
+
+        function startQuiz() {
+
+            currentQuestion = 0;
+            showScreen("quiz");
+            showQuestion();
+
+        }
+
+
+        function showQuestion() {
+
+            const q = questions[currentQuestion];
+
+            document.getElementById("questionNumber").textContent =
+                `QUESTION ${currentQuestion + 1} OF ${questions.length}`;
+
+            document.getElementById("question").textContent = q.question;
+
+            document.getElementById("feedback").textContent = "";
+
+            document.getElementById("progressBar").style.width =
+                (currentQuestion / questions.length * 100) + "%";
+
+            const answersDiv = document.getElementById("answers");
+
+            answersDiv.innerHTML = "";
+
+            q.answers.forEach((answer, index) => {
+
+                const button = document.createElement("button");
+
+                button.textContent = answer;
+
+                button.onclick = () => checkAnswer(index);
+
+                answersDiv.appendChild(button);
+
+            });
+
+        }
+
+
+        function checkAnswer(selectedAnswer) {
+
+            const correctAnswer = questions[currentQuestion].correct;
+
+            if (selectedAnswer === correctAnswer) {
+
+                currentQuestion++;
+
+                if (currentQuestion < questions.length) {
+
+                    showQuestion();
+
+                } else {
+
+                    showScreen("finished");
+
+                    document.getElementById("progressBar").style.width = "100%";
+
+                }
+
+            } else {
+
+                document.getElementById("feedback").textContent =
+                    "Wrong answer! Try again";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
